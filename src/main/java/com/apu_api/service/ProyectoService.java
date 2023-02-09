@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.apu_api.entity.SUBT_APU_IVA;
 import com.apu_api.entity.SUBT_APU_PROYECTO;
 import com.apu_api.entity.SUBT_APU_PROYECTO_IVA;
-import com.apu_api.entity.enums.ListaRoles;
 import com.apu_api.exception.ForbiddenExcep;
 import com.apu_api.exception.InternalErrorExcep;
 import com.apu_api.exception.NotAllowedExcep;
@@ -45,7 +43,7 @@ public class ProyectoService {
 	private JwtUtil jwtTokenUtil;
 	
 		
-	
+	  
 	public JwtResponse obtenerProyectosPorIdUsuario(String _cadena, String _fechaInicio, String _fechaFin, int _page, int _size) {
 		
 		SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -61,16 +59,16 @@ public class ProyectoService {
 	
 	
 	@Transactional
-	public JwtResponse gaurdarProyecto(SUBT_APU_PROYECTO _proyecto) {
+	public JwtResponse gaurdarProyecto(SUBT_APU_PROYECTO _proyectoNuevo) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		JwtUserPrincipal user = (JwtUserPrincipal) securityContext.getAuthentication().getPrincipal();
 		
-		_proyecto.setSap_usuario_codigo(user.getId());
+		_proyectoNuevo.setSap_usuario_codigo(user.getId());
 		
-		_proyecto.setSap_nombre(StringUtil.removeExtraSpaces(_proyecto.getSap_nombre()));
-		_proyecto.setSap_descripcion(StringUtil.removeExtraSpaces(_proyecto.getSap_descripcion()));
+		_proyectoNuevo.setSap_nombre(StringUtil.removeExtraSpaces(_proyectoNuevo.getSap_nombre()));
+		_proyectoNuevo.setSap_descripcion(StringUtil.removeExtraSpaces(_proyectoNuevo.getSap_descripcion()));
 		
-		SUBT_APU_PROYECTO nuevoProyecto = proyectoRepo.save(_proyecto);
+		SUBT_APU_PROYECTO nuevoProyecto = proyectoRepo.save(_proyectoNuevo);
 		
 		Optional<SUBT_APU_IVA> optionalIva = ivaRepo.findLast();
 		
@@ -92,11 +90,11 @@ public class ProyectoService {
 	}
 	
 	
-	public JwtResponse actualizarProyecto(SUBT_APU_PROYECTO _proyecto, long _id) {
+	public JwtResponse actualizarProyecto(SUBT_APU_PROYECTO _proyectoNuevo, long _id) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		JwtUserPrincipal user = (JwtUserPrincipal) securityContext.getAuthentication().getPrincipal();
 		
-		if( _proyecto.getSap_codigo() != _id) {
+		if( _proyectoNuevo.getSap_codigo() != _id) {
 			throw new NotFoundExcep("Error al actualizar el proyecto!");
 		}
 		
@@ -105,40 +103,26 @@ public class ProyectoService {
 			throw new NotFoundExcep("Error no se encrontro el proyecto!");
 		}
 		
-		if(user.getAuthorities().contains(new SimpleGrantedAuthority(ListaRoles.ROLE_ADMINISTRADOR.toString()))) {
-			SUBT_APU_PROYECTO oldProyecto = optionalProyecto.get();
 			
-			_proyecto.setSap_usuario_codigo(oldProyecto.getSap_usuario_codigo());
-			_proyecto.setSap_nombre(StringUtil.removeExtraSpaces(_proyecto.getSap_nombre()));
-			_proyecto.setSap_descripcion(StringUtil.removeExtraSpaces(_proyecto.getSap_descripcion()));
-			
-			SUBT_APU_PROYECTO nuevoProyecto = proyectoRepo.save(_proyecto);
-			
-			JwtResponse response = new JwtResponse(jwtTokenUtil.generateToken(user), nuevoProyecto);
-			
-			return response;
-			
-		}else {
-			
-			SUBT_APU_PROYECTO oldProyecto = optionalProyecto.get();
-			if(_proyecto.getSap_usuario_codigo() != oldProyecto.getSubt_apu_usuario().getSau_codigo()) {
-				throw new ForbiddenExcep("Error, no tiene acceso a este proyecto!");
-			}
-			
-			if(oldProyecto.isSap_estado_finalizacion()) {
-				throw new NotAllowedExcep("Error el proyecto esta finalizado y no se puede modificar, consulte con el administrador!");
-			}
-			
-			_proyecto.setSap_usuario_codigo(oldProyecto.getSap_usuario_codigo());
-			_proyecto.setSap_nombre(StringUtil.removeExtraSpaces(_proyecto.getSap_nombre()));
-			_proyecto.setSap_descripcion(StringUtil.removeExtraSpaces(_proyecto.getSap_descripcion()));
-			
-			SUBT_APU_PROYECTO nuevoProyecto = proyectoRepo.save(_proyecto);
-			
-			JwtResponse response = new JwtResponse(jwtTokenUtil.generateToken(user), nuevoProyecto);
-			return response;
-			
+		SUBT_APU_PROYECTO proyectoAntiguo = optionalProyecto.get();
+
+		if(proyectoAntiguo.getSap_usuario_codigo() != user.getId()) {
+			throw new ForbiddenExcep("Error, no tiene acceso a este proyecto!");
 		}
+		
+		if(proyectoAntiguo.isSap_estado_finalizacion()) {
+			throw new NotAllowedExcep("Error el proyecto esta finalizado y no se puede modificar, consulte con el administrador!");
+		}
+		
+		_proyectoNuevo.setSap_usuario_codigo(user.getId());
+		_proyectoNuevo.setSap_nombre(StringUtil.removeExtraSpaces(_proyectoNuevo.getSap_nombre()));
+		_proyectoNuevo.setSap_descripcion(StringUtil.removeExtraSpaces(_proyectoNuevo.getSap_descripcion()));
+		
+		SUBT_APU_PROYECTO nuevoProyecto = proyectoRepo.save(_proyectoNuevo);
+		
+		JwtResponse response = new JwtResponse(jwtTokenUtil.generateToken(user), nuevoProyecto);
+		return response;
+		
 	}
 	
 	
@@ -154,7 +138,7 @@ public class ProyectoService {
 		
 		SUBT_APU_PROYECTO proyecto = optionalProyecto.get();
 		
-		if(proyecto.getSap_usuario_codigo() != _id) {
+		if(proyecto.getSap_usuario_codigo() != user.getId()) {
 			throw new ForbiddenExcep("Error, no tiene acceso a este proyecto!");
 		}
 		proyectoRepo.deleteById(_id);
