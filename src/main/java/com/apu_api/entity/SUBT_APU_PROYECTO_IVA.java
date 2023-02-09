@@ -36,10 +36,12 @@ public class SUBT_APU_PROYECTO_IVA {
 	private Date sapi_fecha_actualizacion;
 	
 	
+	
 	@ManyToOne
 	@MapsId("sapi_proyecto_codigo")
 	@JoinColumn(name = "SAPI_PROYECTO_CODIGO", referencedColumnName = "SAP_CODIGO")
 	private SUBT_APU_PROYECTO subt_apu_proyecto;
+	
 	
 	
 	@ManyToOne

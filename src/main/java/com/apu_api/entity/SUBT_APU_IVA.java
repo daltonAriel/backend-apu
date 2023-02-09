@@ -36,12 +36,12 @@ public class SUBT_APU_IVA {
 	private Date sai_fecha_creacion;
 	
 	
-	@Column(name = "SAI_FECHA_EXPIRACION", nullable = false)
+	@Column(name = "SAI_FECHA_EXPIRACION", nullable = true)
 	private Date sai_fecha_expiracion;
 	
 	
 	@Column(name = "SAI_ESTADO", nullable = false)
-	private Date sai_estado;
+	private boolean sai_estado;
 	
 	
 }

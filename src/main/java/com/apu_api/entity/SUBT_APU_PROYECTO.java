@@ -45,8 +45,8 @@ public class SUBT_APU_PROYECTO {
 	private Date sap_fecha_finalizacion;
 	
 	
-	@Column(name = "SAP_ESTADO", nullable = false)
-	private boolean sap_estado;
+	@Column(name = "SAP_ESTADO_FINALIZACION", nullable = false)
+	private boolean sap_estado_finalizacion;
 	
 	
 	@Column(name = "SAP_USUARIO_CODIGO", nullable = false)
