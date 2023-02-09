@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
@@ -36,6 +37,8 @@ public class SUBT_APU_USUARIO {
 	
 	@Column(name = "SAU_CLAVE", nullable = false)
 	@NotBlank
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@JsonIgnore
 	private String sau_clave;
 	
 	

@@ -64,7 +64,8 @@ public class ProyectoService {
 		JwtUserPrincipal user = (JwtUserPrincipal) securityContext.getAuthentication().getPrincipal();
 		
 		_proyectoNuevo.setSap_usuario_codigo(user.getId());
-		
+		_proyectoNuevo.setSap_estado_finalizacion(false);
+		_proyectoNuevo.setSap_fecha_finalizacion(null);
 		_proyectoNuevo.setSap_nombre(StringUtil.removeExtraSpaces(_proyectoNuevo.getSap_nombre()));
 		_proyectoNuevo.setSap_descripcion(StringUtil.removeExtraSpaces(_proyectoNuevo.getSap_descripcion()));
 		
@@ -115,6 +116,8 @@ public class ProyectoService {
 		}
 		
 		_proyectoNuevo.setSap_usuario_codigo(user.getId());
+		_proyectoNuevo.setSap_estado_finalizacion(false);
+		_proyectoNuevo.setSap_fecha_finalizacion(null);
 		_proyectoNuevo.setSap_nombre(StringUtil.removeExtraSpaces(_proyectoNuevo.getSap_nombre()));
 		_proyectoNuevo.setSap_descripcion(StringUtil.removeExtraSpaces(_proyectoNuevo.getSap_descripcion()));
 		
