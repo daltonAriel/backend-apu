@@ -48,7 +48,7 @@ public class SUBT_APU_PROYECTO {
 	private BigDecimal sap_costos_indirectos;
 	
 	
-	@Column(name = "SAP_DESCRIPCION", nullable = false, length = 1000)
+	@Column(name = "SAP_DESCRIPCION", nullable = true, length = 1000)
 	private String sap_descripcion;
 	
 	
