@@ -42,7 +42,7 @@ public class ProyectoService {
 	@Autowired
 	private JwtUtil jwtTokenUtil;
 	
-		
+	
 	  
 	public JwtResponse obtenerProyectosPorIdUsuario(String _cadena, String _fechaInicio, String _fechaFin, int _page, int _size) {
 		
@@ -51,7 +51,8 @@ public class ProyectoService {
 		
 		Page<SUBT_APU_PROYECTO> pageProyectos = proyectoRepo.findAll(ProyectoSpecification.byNombreLikeIgnoreAccentAndCapitalize(_cadena).or(ProyectoSpecification.byDescripcionLikeIgnoreAccentAndCapitalize(_cadena))
 				.and(ProyectoSpecification.byId(user.getId()))
-				.and(ProyectoSpecification.byCreationDates(_fechaInicio, _fechaFin))
+				.and(ProyectoSpecification.byCreationDates(_fechaInicio, _fechaFin)
+				.and(ProyectoSpecification.orderBySapCodigoDesc()))
 				, PageRequest.of(_page, _size));
 		JwtResponse response = new JwtResponse(jwtTokenUtil.generateToken(user), pageProyectos);
 		return response;

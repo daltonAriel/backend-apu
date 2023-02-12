@@ -16,6 +16,13 @@ import javax.persistence.criteria.Root;
 
 public class ProyectoSpecification {
 	
+	public static Specification<SUBT_APU_PROYECTO> orderBySapCodigoDesc() {
+	    return (root, query, cb) -> {
+	        query.orderBy(cb.desc(root.get("sap_codigo")));
+	        return null;
+	    };
+	}
+	
 	
 	public static Specification<SUBT_APU_PROYECTO> byId(long _id) {
 		return (root, query, cb) -> {
