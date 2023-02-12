@@ -1,5 +1,6 @@
 package com.apu_api.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,6 +152,38 @@ public class ProyectoService {
 		return response;
 	}
 	
+	
+	public JwtResponse validadorNombre(String _nombre) {
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+		JwtUserPrincipal user = (JwtUserPrincipal) securityContext.getAuthentication().getPrincipal();
+		
+		List<SUBT_APU_PROYECTO> listaProyectos = proyectoRepo.findAll(ProyectoSpecification.byId(user.getId())
+				.and(ProyectoSpecification.byNombreIgnoreAccentAndCapitalize(_nombre)));
+		if(listaProyectos.size() > 0) {
+			JwtResponse response = new JwtResponse(jwtTokenUtil.generateToken(user), true);
+			return response;
+		}else {
+			JwtResponse response = new JwtResponse(jwtTokenUtil.generateToken(user), false);
+			return response;
+		}
+	}
+	
+	
+	public JwtResponse validadorNombreId(long proyectoId, String _nombre ) {
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+		JwtUserPrincipal user = (JwtUserPrincipal) securityContext.getAuthentication().getPrincipal();
+		
+		List<SUBT_APU_PROYECTO> listaProyectos = proyectoRepo.findAll(ProyectoSpecification.byId(user.getId())
+				.and(ProyectoSpecification.byNombreIgnoreAccentAndCapitalize(_nombre))
+				.and(ProyectoSpecification.byNotEqualProyectoCodigo(proyectoId)));
+		if(listaProyectos.size() > 0) {
+			JwtResponse response = new JwtResponse(jwtTokenUtil.generateToken(user), true);
+			return response;
+		}else {
+			JwtResponse response = new JwtResponse(jwtTokenUtil.generateToken(user), false);
+			return response;
+		}
+	}
 	
 	
 }

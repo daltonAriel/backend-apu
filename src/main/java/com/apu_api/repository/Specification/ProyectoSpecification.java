@@ -24,11 +24,14 @@ public class ProyectoSpecification {
 	}
 	
 	
+	
 	public static Specification<SUBT_APU_PROYECTO> byId(long _id) {
 		return (root, query, cb) -> {
 	            return cb.equal(root.get("sap_usuario_codigo"), _id);
 	    };
     }
+	
+	
 	
 	public static Specification<SUBT_APU_PROYECTO> byNombreLikeIgnoreAccentAndCapitalize(String _cadena) {
 		String[] names = StringUtil.stringToArray(_cadena);
@@ -84,6 +87,28 @@ public class ProyectoSpecification {
 	        }
 	    };
 	}
-
+	
+	
+	
+	public static Specification<SUBT_APU_PROYECTO> byNombreIgnoreAccentAndCapitalize(String _nombre) {
+		return (root, query, cb) -> {
+            return cb.equal(cb.function("lower", String.class, cb.function("translate", String.class,cb.lower(root.get("sap_nombre")),cb.literal("áàäâÁÀÄÂéèëêÉÈËÊíìïîÍÌÏÎóòöôÓÒÖÔúùüûÚÙÜÛ"),cb.literal("aaaaaaaaeeeeeeeeiiiiiiiioooooooouuuuuuuu"))), StringUtil.removeAccent(_nombre));
+		};
+    }
+	
+	
+	
+	public static Specification<SUBT_APU_PROYECTO> byProyectoCodigo(long _proyectoId) {
+		return (root, query, cb) -> {
+			return cb.equal(root.get("sap_codigo"), _proyectoId);
+		};
+    }
+	
+	
+	public static Specification<SUBT_APU_PROYECTO> byNotEqualProyectoCodigo(long _proyectoId) {
+		return (root, query, cb) -> {
+			return cb.notEqual(root.get("sap_codigo"), _proyectoId);
+		};
+    }
 	
 }
