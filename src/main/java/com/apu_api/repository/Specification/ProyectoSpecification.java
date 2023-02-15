@@ -25,7 +25,7 @@ public class ProyectoSpecification {
 	
 	
 	
-	public static Specification<SUBT_APU_PROYECTO> byId(long _id) {
+	public static Specification<SUBT_APU_PROYECTO> byUsuarioCodigo(long _id) {
 		return (root, query, cb) -> {
 	            return cb.equal(root.get("sap_usuario_codigo"), _id);
 	    };

@@ -51,7 +51,7 @@ public class ProyectoService {
 		JwtUserPrincipal user = (JwtUserPrincipal) securityContext.getAuthentication().getPrincipal();
 		
 		Page<SUBT_APU_PROYECTO> pageProyectos = proyectoRepo.findAll(ProyectoSpecification.byNombreLikeIgnoreAccentAndCapitalize(_cadena).or(ProyectoSpecification.byDescripcionLikeIgnoreAccentAndCapitalize(_cadena))
-				.and(ProyectoSpecification.byId(user.getId()))
+				.and(ProyectoSpecification.byUsuarioCodigo(user.getId()))
 				.and(ProyectoSpecification.byCreationDates(_fechaInicio, _fechaFin)
 				.and(ProyectoSpecification.orderBySapCodigoDesc()))
 				, PageRequest.of(_page, _size));
@@ -162,7 +162,7 @@ public class ProyectoService {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		JwtUserPrincipal user = (JwtUserPrincipal) securityContext.getAuthentication().getPrincipal();
 		
-		List<SUBT_APU_PROYECTO> listaProyectos = proyectoRepo.findAll(ProyectoSpecification.byId(user.getId())
+		List<SUBT_APU_PROYECTO> listaProyectos = proyectoRepo.findAll(ProyectoSpecification.byUsuarioCodigo(user.getId())
 				.and(ProyectoSpecification.byNombreIgnoreAccentAndCapitalize(_nombre)));
 		if(listaProyectos.size() > 0) {
 			JwtResponse response = new JwtResponse(jwtTokenUtil.generateToken(user), true);
@@ -178,7 +178,7 @@ public class ProyectoService {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		JwtUserPrincipal user = (JwtUserPrincipal) securityContext.getAuthentication().getPrincipal();
 		
-		List<SUBT_APU_PROYECTO> listaProyectos = proyectoRepo.findAll(ProyectoSpecification.byId(user.getId())
+		List<SUBT_APU_PROYECTO> listaProyectos = proyectoRepo.findAll(ProyectoSpecification.byUsuarioCodigo(user.getId())
 				.and(ProyectoSpecification.byNombreIgnoreAccentAndCapitalize(_nombre))
 				.and(ProyectoSpecification.byNotEqualProyectoCodigo(proyectoId)));
 		if(listaProyectos.size() > 0) {
