@@ -66,7 +66,7 @@ public class ProyectoController {
 	
 	
 	@GetMapping("/validador-nombre")
-	public ResponseEntity<?> validadorNombre(@RequestParam(value="nombre", required = true) String _nombre) {
+	public ResponseEntity<?> validadorNombre(@RequestParam(value="nombre", required = false) String _nombre) {
 		JwtResponse resp = proyectoService.validadorNombre(_nombre);
 		return ResponseEntity.ok(resp);
 	}
@@ -74,7 +74,7 @@ public class ProyectoController {
 	
 	
 	@GetMapping("/validador-nombre/{id}")
-	public ResponseEntity<?> validadorNombreId(@PathVariable(value = "id") long _proyectoId, @RequestParam(value="nombre", required = true) String _nombre) {
+	public ResponseEntity<?> validadorNombreId(@PathVariable(value = "id") long _proyectoId, @RequestParam(value="nombre", required = false) String _nombre) {
 		JwtResponse resp = proyectoService.validadorNombreId(_proyectoId, _nombre);
 		return ResponseEntity.ok(resp);
 	}

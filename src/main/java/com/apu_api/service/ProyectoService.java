@@ -146,6 +146,11 @@ public class ProyectoService {
 		if(proyecto.getSap_usuario_codigo() != user.getId()) {
 			throw new ForbiddenExcep("Error, no tiene acceso a este proyecto!");
 		}
+		
+		if(proyecto.isSap_estado_finalizacion()) {
+			throw new NotAllowedExcep("Error el proyecto esta finalizado y no se puede modificar!");
+		}
+		
 		proyectoRepo.deleteById(_id);
 
 		JwtResponse response = new JwtResponse(jwtTokenUtil.generateToken(user), null);
